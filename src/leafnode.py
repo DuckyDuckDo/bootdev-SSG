@@ -6,6 +6,7 @@ class LeafNode(HTMLNode):
         
     
     def to_html(self):
+        """Wraps tag and values to create HTML text"""
         if not self.value:
             raise ValueError("Leaf nodes must have value")
         
