@@ -10,11 +10,13 @@ class HTMLNode():
         raise NotImplementedError
 
     def props_to_html(self):
-        """Prepares a props string to add to opening tag of HTML elements"""
-        res = []
-        for tag, value in self.props.items():
-            res.append(f'{tag}=\"{value}\"')
-        return " ".join(res) 
+        """Prepares props strings for HTML elements"""
+        if self.props is None:
+            return ""
+        props_html = ""
+        for prop in self.props:
+            props_html += f' {prop}="{self.props[prop]}"'
+        return props_html
     
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"

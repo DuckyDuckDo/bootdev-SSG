@@ -6,10 +6,13 @@ class ParentNode(HTMLNode):
     
     def to_html(self):
         """Parse Parent Node to HTML recursively iterating over its children"""
-        
+
         if not self.tag:
             raise ValueError("Parent node must have a tag")
+        if not self.children:
+            raise ValueError("Parent node must have children")
+        
         res = []
         for child in self.children:
             res.append(child.to_html())
-        return f"<{self.tag}{" " + self.props_to_html() if self.props else ""}>{"".join(res)}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{"".join(res)}</{self.tag}>"
