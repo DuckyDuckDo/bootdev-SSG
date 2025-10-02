@@ -3,7 +3,7 @@ import unittest
 from textnode import TextNode, TextType
 from split_nodes_delimiter import *
 
-class TestTextNode(unittest.TestCase):
+class TestSplitNode(unittest.TestCase):
     def test_delim_bold(self):
         node = TextNode("This is text with a **bolded** word", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
