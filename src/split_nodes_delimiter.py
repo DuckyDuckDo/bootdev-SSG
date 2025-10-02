@@ -107,3 +107,22 @@ def split_nodes_link(old_nodes):
             result.append(TextNode(curr_text, TextType.TEXT))
 
     return result
+
+def text_to_textnodes(text):
+    """
+    Converts text into text nodes by utilizing all of the splitting functions once and updating the result.
+    Result starts with a singular text node of the given input text. 
+    """
+    delimiter_map = {
+        TextType.CODE: '`',
+        TextType.ITALIC: '_',
+        TextType.BOLD: '**'
+    }
+    
+    result = [TextNode(text, TextType.TEXT)]
+    for text_type in delimiter_map:
+        result = split_nodes_delimiter(result, delimiter_map[text_type], text_type)
+    
+    result = split_nodes_image(result)
+    result = split_nodes_link(result)
+    return result
