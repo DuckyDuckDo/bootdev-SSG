@@ -1,35 +1,31 @@
 from enum import Enum
-from htmlnode import *
-from text_to_textnode import *
-from textnode import *
+
+from htmlnode import ParentNode
+from text_to_textnode import text_to_textnodes
+from textnode import text_node_to_html_node, TextNode, TextType
+
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph"
     HEADING = "heading"
     CODE = "code"
     QUOTE = "quote"
-    ULIST = "unordered_list"
     OLIST = "ordered_list"
+    ULIST = "unordered_list"
 
 
-def markdown_to_blocks(markdown_text):
-    """
-    Convert markdown text down into blocks
-    """
-    blocks = markdown_text.split("\n\n")
-    result = []
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
     for block in blocks:
-        if block == "":
+        if block.strip() == "":
             continue
         block = block.strip()
-        result.append(block)
+        filtered_blocks.append(block)
+    return filtered_blocks
 
-    return result
 
 def block_to_block_type(block):
-    """
-    Converts a block to a specific block type
-    """
     lines = block.split("\n")
 
     if block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
@@ -55,16 +51,15 @@ def block_to_block_type(block):
         return BlockType.OLIST
     return BlockType.PARAGRAPH
 
+
 def markdown_to_html_node(markdown):
-    """
-    Converts raw markdown to one HTML node with many child elements
-    """
     blocks = markdown_to_blocks(markdown)
     children = []
     for block in blocks:
-        block_html_node = block_to_html_node(block)
-        children.append(block_html_node)
+        html_node = block_to_html_node(block)
+        children.append(html_node)
     return ParentNode("div", children, None)
+
 
 def block_to_html_node(block):
     block_type = block_to_block_type(block)
@@ -84,9 +79,6 @@ def block_to_html_node(block):
 
 
 def text_to_children(text):
-    """
-    Takes text string and converts into a list of HTMLNodes as children of the parent HTML node
-    """
     text_nodes = text_to_textnodes(text)
     children = []
     for text_node in text_nodes:
@@ -94,11 +86,13 @@ def text_to_children(text):
         children.append(html_node)
     return children
 
+
 def paragraph_to_html_node(block):
     lines = block.split("\n")
     paragraph = " ".join(lines)
     children = text_to_children(paragraph)
     return ParentNode("p", children)
+
 
 def heading_to_html_node(block):
     level = 0
